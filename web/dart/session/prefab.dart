@@ -27,6 +27,7 @@ abstract class Prefab extends InstanceComponent
     with EntityBase, ClampedEntityBase {
   final SpanElement _nameSpan;
   final Resource? image;
+  String _color = '#222';
 
   @override
   set size(int size) {
@@ -39,6 +40,13 @@ abstract class Prefab extends InstanceComponent
 
   String get id;
   String get name;
+
+  set color(String value) {
+    this._color = value;
+    movables.forEach((m) => m.onPrefabUpdate());
+  }
+
+  String get color => _color;
 
   @override
   int get minSize => 1;

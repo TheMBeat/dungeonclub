@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:math' as math;
 
+import 'package:dungeonclub/iterable_extension.dart';
 import 'package:dungeonclub/models/entity_base.dart';
 import 'package:dungeonclub/models/token.dart';
 import 'package:dungeonclub/models/token_bar.dart';
@@ -95,6 +96,21 @@ class Movable extends InstanceComponent
   }
 
   @override
+  set color(String? value) {
+    super.color = value;
+    var imgElement = htmlRoot.children.firstWhereOrNull(
+      (element) => element.classes.contains('img')
+    );
+    if (imgElement == null) { return; }
+
+    if (prefab.image == null && value != null) {
+      htmlRoot.queryDom('.img').style.backgroundColor = color;
+    } else {
+      htmlRoot.queryDom('.img').style.removeProperty('background-color');
+    }
+  }
+
+  @override
   set auraRadius(double auraRadius) {
     super.auraRadius = auraRadius;
     _aura.style.display = auraRadius == 0 ? 'none' : '';
@@ -129,6 +145,7 @@ class Movable extends InstanceComponent
     required Point<double>? pos,
     required Iterable<int>? conds,
     bool createTooltip = true,
+    String? color = '#222',
   }) : super(DivElement()) {
     htmlRoot
       ..className = 'movable'
@@ -147,6 +164,7 @@ class Movable extends InstanceComponent
 
     applyImage();
     super.size = 0;
+    this.color = color;
 
     if (pos != null) {
       position = pos;
@@ -164,13 +182,14 @@ class Movable extends InstanceComponent
     required int id,
     Iterable<int>? conds,
     Point<double>? pos,
+    String? color = '#222',
   }) {
     if (prefab is EmptyPrefab) {
       return EmptyMovable._(
-          board: board, prefab: prefab, id: id, pos: pos, conds: conds);
+          board: board, prefab: prefab, id: id, pos: pos, conds: conds, color: color);
     }
     return Movable._(
-        board: board, prefab: prefab, id: id, pos: pos, conds: conds);
+        board: board, prefab: prefab, id: id, pos: pos, conds: conds, color: color);
   }
 
   @override
@@ -245,6 +264,10 @@ class Movable extends InstanceComponent
     }
     htmlRoot.classes.toggle('accessible', accessible);
     updateTooltip();
+  }
+
+  bool hasImage() {
+    return prefab.image != null;
   }
 
   void applyImage() {
@@ -363,6 +386,7 @@ class EmptyMovable extends Movable {
     required int id,
     required Point<double>? pos,
     required Iterable<int>? conds,
+    String? color = '#222',
   }) : super._(
           board: board,
           prefab: prefab,
@@ -370,6 +394,7 @@ class EmptyMovable extends Movable {
           pos: pos,
           conds: conds,
           createTooltip: false,
+          color: color
         ) {
     htmlRoot
       ..classes.add('empty')

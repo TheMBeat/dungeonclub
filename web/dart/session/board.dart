@@ -52,6 +52,9 @@ final _selectedLabelPrefix =
     _selectedLabelWrapper.children.first as HtmlElement;
 final _selectedLabel = _selectedLabelWrapper.children.last as InputElement;
 final InputElement _selectedSize = queryDom('#movableSize');
+final InputElement _selectedColor = queryDom('#movableColor');
+final ButtonElement _selectedColorRemove = queryDom('#movableColorRemove');
+final DivElement _selectedColorPanel = queryDom('#movableColorPanel');
 final InputElement _selectedAura = queryDom('#movableAura');
 final ButtonElement _addTokenBarButton = queryDom('#barAddButton');
 final ButtonElement _selectedInvisible = queryDom('#movableInvisible');
@@ -206,6 +209,14 @@ class Board {
       _selectedAura.valueAsNumber = activeMovable.auraRadius;
       _updateSelectedInvisible(activeMovable.invisible);
       _selectedSize.valueAsNumber = activeMovable.size;
+
+      if (activeMovable.hasImage() == false) {
+        _selectedColor.value = activeMovable.color;
+        _selectedColorPanel.style.display = 'block';
+      } else {
+        _selectedColorPanel.style.display = 'none';
+      }
+
       _updateSelectionSizeInherit();
 
       _selectionConditions.onActiveTokenChange(activeMovable);
@@ -536,6 +547,10 @@ class Board {
     _selectedGoTo.onClick.listen((_) => _goToMovable());
     _selectedPing.onClick.listen((_) => _pingMovable());
 
+    _selectedColorRemove.onClick.listen((event) {
+      selected.forEach((m) { m.color = null; });
+    });
+
     _listenSelectedLazyUpdate(_selectedLabel, onChange: (m, value) {
       m.label = value;
     });
@@ -551,6 +566,12 @@ class Board {
     _listenSelectedLazyUpdate(_selectedSize, onChange: (m, value) {
       m.setSizeWithGridSpecifics(int.parse(value));
       _updateSelectionSizeInherit();
+    });
+
+    _listenSelectedLazyUpdate(_selectedColor, onChange: (m, value) {
+      // m.setSizeWithGridSpecifics(int.parse(value));
+      // _updateSelectionSizeInherit();
+      m.color = value;
     });
 
     _addTokenBarButton.onClick.listen((_) => _addNewBarToSelectedTokens());
