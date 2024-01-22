@@ -1039,13 +1039,14 @@ $token-unit-size-half-px: ($token-unit-size * -0.5) + px;
         align-items: center;
         justify-content: center;
 
-        .img { background: #222 !important; }
+        // .img { background: #222 !important; }
 
         > span {
             pointer-events: none;
             display: flex;
             font-family: 'Fira Mono';
-            color: var(--color-bad);
+            color: #ffffff;
+            mix-blend-mode: difference;
             text-align: center;
             font-size: calc(var(--size) * 110px / var(--length));
             z-index: 3;

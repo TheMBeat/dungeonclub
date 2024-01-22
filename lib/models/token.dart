@@ -14,6 +14,7 @@ mixin TokenModel on EntityBase {
   String label = '';
   double auraRadius = 0;
   bool invisible = false;
+  String? color = '#222';
 
   List<TokenBar> bars = [];
 
@@ -40,6 +41,10 @@ mixin TokenModel on EntityBase {
     conds.clear();
     conds.addAll(List.from(json['conds'] ?? []));
 
+    if (json['color'] != null) {
+      this.color = json['color'];
+    }
+
     bars = List.from(json['bars'] ?? [])
         .map((bar) => TokenBar.parse(bar))
         .toList();
@@ -59,6 +64,7 @@ mixin TokenModel on EntityBase {
         'conds': conds.toList(),
         'aura': auraRadius,
         'invisible': invisible,
+        'color': color,
         'bars': bars.map((e) => e.toJson()).toList()
       };
 }
