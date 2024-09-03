@@ -62,7 +62,7 @@ jobs:
         run: sudo apt-get install -y zip
 
       - name: Download Linux build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: all_linux
 
@@ -74,7 +74,7 @@ jobs:
       - run: cp -r build/. build_macos
 
       - name: Download Windows server
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: server_windows
           path: build
@@ -83,7 +83,7 @@ jobs:
         run: cd build; zip -r ../dungeonclub-windows.zip *; cd ..
 
       - name: Download MacOS server
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: server_macos
           path: build_macos
